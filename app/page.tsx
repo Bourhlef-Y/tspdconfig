@@ -97,7 +97,7 @@ export default function Home() {
                     {activeTab === 'general' ? (
                         <SectionGeneral config={config} setConfig={setConfig} />
                     ) : (
-                        <SectionJobs config={config} setConfig={setConfig} />
+                        <SectionJobs config={config} setConfig={setConfig} showRaw={showRaw} onToggleRawMode={toggleRawMode} />
                     )}
                 </div>
 
