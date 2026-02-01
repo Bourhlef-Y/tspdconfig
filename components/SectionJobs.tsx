@@ -1,13 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Briefcase, Plus, Code, LayoutList, Briefcase as BriefcaseIcon } from 'lucide-react'; // Imports fixes
+import { Briefcase, Plus, Briefcase as BriefcaseIcon } from 'lucide-react';
 import JobMain from './jobs/JobMain';
 import { defaultConfig, parseJobsBlock } from '@/lib/configParser';
 import { exportJobsOnly } from '@/lib/luaExporter';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 
 interface SectionJobsProps {
     config: any;
