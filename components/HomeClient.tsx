@@ -172,17 +172,17 @@ export default function HomeClient() {
     };
 
     return (
-        <main className="min-h-screen bg-background p-8 text-foreground transition-colors duration-300">
+        <main className="min-h-screen bg-background p-8 text-foreground transition-colors duration-300 animate-fade-in motion-reduce-none">
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in-up motion-reduce-none" style={{ animationDelay: '0.05s', animationFillMode: 'backwards' }}>
                     <div>
                         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">TSPD Config.lua Editor</h1>
-                        <p className="text-muted-foreground">Éditeur de configuration complet</p>
-                        <p className="text-xs text-muted-foreground/80 mt-1">Configuration enregistrée automatiquement en local (conservée à la fermeture)</p>
+                        <p className="text-muted-foreground">Créer votre config.lua pour TSPD facilement</p>
+                        <p className="text-xs text-muted-foreground/80 mt-1">Créer par Jak Shyrak pour LoftParisRP; </p>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3 bg-card p-2 rounded-lg border border-border shadow-sm">
+                        <div className="flex items-center gap-3 bg-card p-2 rounded-lg border border-border shadow-sm transition-transform duration-200 hover:scale-[1.02]">
                             <Label htmlFor="mode-switch" className="flex items-center gap-2 text-xs font-medium cursor-pointer">
                                 {showRaw ? <Code size={14} className="text-blue-400" /> : <LayoutList size={14} className="text-blue-400" />}
                                 {showRaw ? 'Mode Brut' : 'Éditeur Visuel'}
@@ -196,7 +196,7 @@ export default function HomeClient() {
                         <ModeToggle />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="default" className="shadow-lg hover:shadow-xl transition-all gap-2">
+                                <Button variant="default" className="shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-100 gap-2">
                                     Exporter config.lua
                                     <ChevronDown size={18} className="opacity-80" />
                                 </Button>
@@ -216,7 +216,7 @@ export default function HomeClient() {
                 </div>
 
                 {showRaw ? (
-                    <div className="flex-1 p-6 bg-card rounded-lg shadow-xl border border-border min-h-[600px] flex flex-col">
+                    <div className="flex-1 p-6 bg-card rounded-lg shadow-xl border border-border min-h-[600px] flex flex-col animate-fade-in-up motion-reduce-none">
                         <div className="bg-blue-500/10 border border-blue-500/20 text-blue-500 p-3 rounded mb-4 text-sm shrink-0">
                             <strong>Mode Édition Complète :</strong> Vous modifiez ici l'intégralité du fichier <code>config.lua</code>.
                             Les changements seront appliqués à l'interface visuelle lorsque vous désactiverez ce mode.
@@ -232,10 +232,10 @@ export default function HomeClient() {
                 ) : (
                     <>
                         {/* Tabs Navigation (Visible only in Visual Mode) */}
-                        <div className="flex rounded-lg bg-muted p-1 w-fit">
+                        <div className="flex rounded-lg bg-muted p-1 w-fit [&_button]:transition-all [&_button]:duration-200 [&_button]:ease-out [&_button:hover]:scale-[1.02]">
                             <button
                                 onClick={() => setActiveTab('general')}
-                                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'general'
+                                className={`px-6 py-2 rounded-md text-sm font-medium ${activeTab === 'general'
                                     ? 'bg-background text-foreground shadow-sm'
                                     : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                     }`}
@@ -244,7 +244,7 @@ export default function HomeClient() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('jobs')}
-                                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'jobs'
+                                className={`px-6 py-2 rounded-md text-sm font-medium ${activeTab === 'jobs'
                                     ? 'bg-background text-foreground shadow-sm'
                                     : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
                                     }`}
@@ -253,8 +253,8 @@ export default function HomeClient() {
                             </button>
                         </div>
 
-                        {/* Main Content Area */}
-                        <div className="transition-all duration-300 ease-in-out">
+                        {/* Main Content Area — ré-animation au changement d'onglet */}
+                        <div key={activeTab} className="animate-fade-in-up motion-reduce-none">
                             {activeTab === 'general' && (
                                 <SectionGeneral config={config} setConfig={setConfig} />
                             )}

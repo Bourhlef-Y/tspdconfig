@@ -91,7 +91,7 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
     };
 
     return (
-        <div className="bg-card rounded-lg shadow-xl overflow-hidden flex flex-col h-[800px] border border-border">
+        <div className="bg-card rounded-lg shadow-xl overflow-hidden flex flex-col h-[800px] border border-border animate-fade-in-up motion-reduce-none">
             {/* Header Section */}
             <div className="p-4 bg-muted/40 border-b border-border flex justify-between items-center shrink-0">
                 <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -105,7 +105,7 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
                     <div className="p-3 border-b border-border">
                         <Button
                             onClick={handleCreateJobClick}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
                             size="sm"
                         >
                             <Plus size={16} className="mr-2" /> Nouveau Métier
@@ -113,11 +113,11 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-2 space-y-1">
-                        {config.Jobs && Object.keys(config.Jobs).map(jobKey => (
+                        {config.Jobs && Object.keys(config.Jobs).map((jobKey) => (
                             <button
                                 key={jobKey}
                                 onClick={() => setActiveJob(jobKey)}
-                                className={`w-full text-left px-3 py-2 rounded transition-colors flex flex-col ${activeJob === jobKey
+                                className={`w-full text-left px-3 py-2 rounded transition-all duration-200 flex flex-col hover:translate-x-0.5 motion-reduce-none ${activeJob === jobKey
                                     ? 'bg-card border border-primary/50 shadow-sm'
                                     : 'hover:bg-muted/50 border border-transparent'
                                     }`}
@@ -138,16 +138,18 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
                     </div>
                 </div>
 
-                {/* Zone d'édition principale */}
+                {/* Zone d'édition principale — animation au changement de métier */}
                 {activeJob && config.Jobs?.[activeJob] ? (
-                    <JobMain
-                        activeJobKey={activeJob}
-                        job={config.Jobs[activeJob]}
-                        onChange={handleJobChange}
-                        onDelete={handleDeleteJob}
-                    />
+                    <div key={activeJob} className="flex-1 overflow-auto animate-fade-in-up motion-reduce-none">
+                        <JobMain
+                            activeJobKey={activeJob}
+                            job={config.Jobs[activeJob]}
+                            onChange={handleJobChange}
+                            onDelete={handleDeleteJob}
+                        />
+                    </div>
                 ) : (
-                    <div className="flex-1 flex items-center justify-center bg-muted/20 text-muted-foreground">
+                    <div className="flex-1 flex items-center justify-center bg-muted/20 text-muted-foreground animate-fade-in motion-reduce-none">
                         <div className="text-center">
                             <Briefcase size={48} className="mx-auto mb-4 opacity-20" />
                             <p>Sélectionnez un métier pour le configurer</p>

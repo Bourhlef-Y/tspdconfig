@@ -8,6 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
+type SpawnPoint = { x: number; y: number; z: number; w?: number };
+
+interface SpawnListProps {
+    title: string;
+    points: SpawnPoint[];
+    onAdd: () => void;
+    onUpdate: (index: number, value: SpawnPoint) => void;
+    onRemove: (index: number) => void;
+}
+
 const JobGarage = ({ job, onChange }: { job: any, onChange: (j: any) => void }) => {
     const garage = job.garage || {
         spawn: { x: 0, y: 0, z: 0, w: 0 },
@@ -80,22 +90,22 @@ const JobGarage = ({ job, onChange }: { job: any, onChange: (j: any) => void }) 
                         title="Points de Sortie (Véhicules)"
                         points={garage.spawnPoints}
                         onAdd={() => addSpawnPoint('spawnPoints')}
-                        onUpdate={(idx: number, v: { x: number; y: number; z: number; w?: number }) => updateSpawnPoint('spawnPoints', idx, v)}
-                        onRemove={(idx: number) => removeSpawnPoint('spawnPoints', idx)}
+                        onUpdate={(index, value) => updateSpawnPoint('spawnPoints', index, value)}
+                        onRemove={(index) => removeSpawnPoint('spawnPoints', index)}
                     />
                     <SpawnList
                         title="Points de Sortie (Hélicoptères)"
                         points={garage.heliSpawnPoints}
                         onAdd={() => addSpawnPoint('heliSpawnPoints')}
-                        onUpdate={(idx: number, v: { x: number; y: number; z: number; w?: number }) => updateSpawnPoint('heliSpawnPoints', idx, v)}
-                        onRemove={(idx: number) => removeSpawnPoint('heliSpawnPoints', idx)}
+                        onUpdate={(index, value) => updateSpawnPoint('heliSpawnPoints', index, value)}
+                        onRemove={(index) => removeSpawnPoint('heliSpawnPoints', index)}
                     />
                     <SpawnList
                         title="Points de Sortie (Bateaux)"
                         points={garage.boatSpawnPoints}
                         onAdd={() => addSpawnPoint('boatSpawnPoints')}
-                        onUpdate={(idx: number, v: { x: number; y: number; z: number; w?: number }) => updateSpawnPoint('boatSpawnPoints', idx, v)}
-                        onRemove={(idx: number) => removeSpawnPoint('boatSpawnPoints', idx)}
+                        onUpdate={(index, value) => updateSpawnPoint('boatSpawnPoints', index, value)}
+                        onRemove={(index) => removeSpawnPoint('boatSpawnPoints', index)}
                     />
                 </div>
             </CardContent>
@@ -103,7 +113,7 @@ const JobGarage = ({ job, onChange }: { job: any, onChange: (j: any) => void }) 
     );
 };
 
-const SpawnList = ({ title, points, onAdd, onUpdate, onRemove }: any) => {
+const SpawnList = ({ title, points, onAdd, onUpdate, onRemove }: SpawnListProps) => {
     return (
         <div>
             <div className="flex justify-between items-center mb-4 border-b border-border pb-1">
@@ -119,13 +129,13 @@ const SpawnList = ({ title, points, onAdd, onUpdate, onRemove }: any) => {
             </div>
             <div className="space-y-4">
                 {points && points.length > 0 ? (
-                    points.map((pt: any, i: number) => (
+                    points.map((pt: SpawnPoint, i: number) => (
                         <div key={i} className="flex gap-2 items-start bg-muted/40 p-3 rounded border border-border">
                             <div className="flex-1">
                                 <VectorInput
                                     label={`Point #${i + 1}`}
                                     value={pt}
-                                    onChange={(v: any) => onUpdate(i, v)}
+                                    onChange={(v: SpawnPoint) => onUpdate(i, v)}
                                     hasHeading={true}
                                 />
                             </div>
