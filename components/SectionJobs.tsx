@@ -1,22 +1,21 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Briefcase, Plus, Code, LayoutList, Briefcase as BriefcaseIcon } from 'lucide-react'; // Imports fixes
+import { Briefcase, Plus, Briefcase as BriefcaseIcon } from 'lucide-react';
 import JobMain from './jobs/JobMain';
 import { defaultConfig, parseJobsBlock } from '@/lib/configParser';
 import { exportJobsOnly } from '@/lib/luaExporter';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 
 interface SectionJobsProps {
     config: any;
     setConfig: (c: any) => void;
+    showRaw?: boolean;
+    onToggleRawMode?: (val: boolean) => void;
 }
 
-const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
+const SectionJobs = ({ config, setConfig, showRaw = false, onToggleRawMode }: SectionJobsProps) => {
     const [activeJob, setActiveJob] = useState<string | null>(null);
-    const [showRaw, setShowRaw] = useState(false);
     const [rawText, setRawText] = useState(config.JobsRaw || '');
 
     // Initialiser activeJob si nécessaire
@@ -66,8 +65,8 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
         }
     };
 
-    const toggleRawMode = (val: boolean) => {
-        if (val) {
+    useEffect(() => {
+        if (showRaw) {
             // VISUAL -> RAW
             // On génère le Lua à partir de la config visuelle actuelle
             const lua = exportJobsOnly(config.Jobs);
@@ -102,8 +101,7 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
                 // On laisse passer quand même pour ne pas bloquer l'UI ? Non, le user veut vice-versa.
             }
         }
-        setShowRaw(val);
-    };
+    }, [showRaw]);
 
     const handleRawChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target.value;
@@ -119,18 +117,6 @@ const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
                 <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                     <BriefcaseIcon className="text-blue-500" /> Configuration des Métiers
                 </h2>
-
-                <div className="flex items-center gap-3 bg-card p-2 rounded-lg border border-border">
-                    <Label htmlFor="mode-switch" className="flex items-center gap-2 text-xs font-medium cursor-pointer">
-                        {showRaw ? <Code size={14} className="text-blue-400" /> : <LayoutList size={14} className="text-blue-400" />}
-                        {showRaw ? 'Mode Brut (Lua)' : 'Éditeur Visuel'}
-                    </Label>
-                    <Switch
-                        id="mode-switch"
-                        checked={showRaw}
-                        onCheckedChange={toggleRawMode}
-                    />
-                </div>
             </div>
 
             {showRaw ? (
