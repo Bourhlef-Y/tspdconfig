@@ -67,8 +67,8 @@ const SectionJobs = ({ config, setConfig, showRaw = false, onToggleRawMode }: Se
         }
     };
 
-    const toggleRawMode = (val: boolean) => {
-        if (val) {
+    useEffect(() => {
+        if (showRaw) {
             // VISUAL -> RAW
             // On génère le Lua à partir de la config visuelle actuelle
             const lua = exportJobsOnly(config.Jobs);
@@ -103,8 +103,7 @@ const SectionJobs = ({ config, setConfig, showRaw = false, onToggleRawMode }: Se
                 // On laisse passer quand même pour ne pas bloquer l'UI ? Non, le user veut vice-versa.
             }
         }
-        setShowRaw(val);
-    };
+    }, [showRaw]);
 
     const handleRawChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target.value;
