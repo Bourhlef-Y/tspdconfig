@@ -61,29 +61,33 @@ const JobBasicInfo = ({ job, onChange }: { job: any, onChange: (j: any) => void 
                         />
                         <div className="space-y-1">
                             <Label htmlFor="whitelisted" className="text-base cursor-pointer">Métier Whitelisté</Label>
-                            <p className="text-xs text-muted-foreground">Si activé, le recrutement se fait uniquement via dossier/concours (nécessite setjob).</p>
+                            <p className="text-xs text-muted-foreground">Si activé, le recrutement se fait uniquement via dossier/concours (nécessite setjob). Si désactivé, pas de Gestion RH (recruteur/patron).</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <Label htmlFor="recruiter-grade">Grade Recruteur (ID)</Label>
-                    <Input
-                        id="recruiter-grade"
-                        type="number"
-                        value={job.recruiterGrade ?? 0}
-                        onChange={(e) => handleChange('recruiterGrade', parseInt(e.target.value) || 0)}
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="boss-grade">Grade Patron (ID)</Label>
-                    <Input
-                        id="boss-grade"
-                        type="number"
-                        value={job.bossGrade ?? 0}
-                        onChange={(e) => handleChange('bossGrade', parseInt(e.target.value) || 0)}
-                    />
+                <div className={`space-y-4 transition-opacity ${!job.whitelisted ? 'opacity-50 pointer-events-none' : ''}`}>
+                    <p className="text-xs text-muted-foreground italic">Gestion RH — actif uniquement si métier whitelisté</p>
+                    <div className="space-y-2">
+                        <Label htmlFor="recruiter-grade">Grade Recruteur (ID)</Label>
+                        <Input
+                            id="recruiter-grade"
+                            type="number"
+                            value={job.recruiterGrade ?? 0}
+                            onChange={(e) => handleChange('recruiterGrade', parseInt(e.target.value) || 0)}
+                            disabled={!job.whitelisted}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="boss-grade">Grade Patron (ID)</Label>
+                        <Input
+                            id="boss-grade"
+                            type="number"
+                            value={job.bossGrade ?? 0}
+                            onChange={(e) => handleChange('bossGrade', parseInt(e.target.value) || 0)}
+                            disabled={!job.whitelisted}
+                        />
+                    </div>
                 </div>
             </CardContent>
         </Card>

@@ -7,6 +7,9 @@ import JobLocations from './JobLocations';
 import JobGarage from './JobGarage';
 import JobPeds from './JobPeds';
 import JobVehicles from './JobVehicles';
+import JobWeaponPacks from './JobWeaponPacks';
+import JobUniforms from './JobUniforms';
+import JobGradeImages from './JobGradeImages';
 import { Button } from '@/components/ui/button';
 
 interface JobMainProps {
@@ -27,6 +30,9 @@ const JobMain = ({ activeJobKey, job, onChange, onDelete }: JobMainProps) => {
         { id: 'locations', label: 'Localisations' },
         { id: 'garage', label: 'Garage' },
         { id: 'peds', label: 'Peds' },
+        { id: 'uniforms', label: 'Uniformes' },
+        { id: 'gradeImages', label: 'Images grades' },
+        { id: 'weaponPacks', label: 'Armurerie' },
         { id: 'vehicles', label: 'Véhicules' },
     ];
 
@@ -72,6 +78,9 @@ const JobMain = ({ activeJobKey, job, onChange, onDelete }: JobMainProps) => {
                 {activeTab === 'locations' && <JobLocations job={job} onChange={onChange} />}
                 {activeTab === 'garage' && <JobGarage job={job} onChange={onChange} />}
                 {activeTab === 'peds' && <JobPeds job={job} onChange={onChange} />}
+                {activeTab === 'uniforms' && <JobUniforms job={job} onChange={onChange} />}
+                {activeTab === 'gradeImages' && <JobGradeImages job={job} onChange={onChange} />}
+                {activeTab === 'weaponPacks' && <JobWeaponPacks job={job} onChange={onChange} />}
                 {activeTab === 'vehicles' && <JobVehicles job={job} onChange={onChange} />}
             </div>
         </div>

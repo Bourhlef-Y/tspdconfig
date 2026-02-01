@@ -19,8 +19,9 @@ const JobLocations = ({ job, onChange }: { job: any, onChange: (j: any) => void 
             </CardHeader>
 
             <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <h4 className="text-sm font-bold text-muted-foreground mb-4 uppercase tracking-wider border-b border-border pb-1">Gestion RH</h4>
+                <div className={!job.whitelisted ? 'opacity-50 pointer-events-none' : ''}>
+                    <h4 className="text-sm font-bold text-muted-foreground mb-1 uppercase tracking-wider border-b border-border pb-1">Gestion RH</h4>
+                    <p className="text-xs text-muted-foreground italic mb-4">Actif uniquement si métier whitelisté (onglet Général)</p>
                     <VectorInput
                         label="Point Recrutement"
                         value={job.recruiterPoint}

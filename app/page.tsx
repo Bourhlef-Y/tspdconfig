@@ -1,96 +1,15 @@
-"use client"
+import HomeClient from '@/components/HomeClient';
 
-import { useState } from 'react';
-import SectionJobs from '@/components/SectionJobs';
-import { parseConfigLua } from '@/lib/configParser';
-import { exportToLua } from '@/lib/luaExporter';
-import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/mode-toggle';
-import { defaultConfig } from '@/lib/configParser';
+type PageProps = {
+    params?: Promise<Record<string, string | string[]>>;
+    searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
 
-import SectionGeneral from '@/components/SectionGeneral';
-
-export default function Home() {
-    const [config, setConfig] = useState(defaultConfig);
-    const [activeTab, setActiveTab] = useState<'general' | 'jobs'>('general');
-
-    const handleImport = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = e.target.value;
-        if (val) {
-            try {
-                const parsed = parseConfigLua(val);
-                setConfig(parsed);
-            } catch (e) {
-                console.error(e);
-                alert("Erreur de parsing");
-            }
-        }
-    };
-
-    const handleExport = () => {
-        const lua = exportToLua(config);
-        console.log(lua);
-        alert("Config exportée dans la console (F12) et copiée dans le presse-papier !");
-        navigator.clipboard.writeText(lua);
-    };
-
-    return (
-        <main className="min-h-screen bg-background p-8 text-foreground">
-            <div className="max-w-7xl mx-auto space-y-8">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">TSPD Config Editor</h1>
-                        <p className="text-muted-foreground">Éditeur de configuration complet</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <ModeToggle />
-                        <Button onClick={handleExport} variant="default" className="shadow-lg hover:shadow-xl transition-all">
-                            Exporter config.lua
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Tabs Navigation */}
-                <div className="flex rounded-lg bg-muted p-1 w-fit">
-                    <button
-                        onClick={() => setActiveTab('general')}
-                        className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'general'
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
-                            }`}
-                    >
-                        Général & Admin
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('jobs')}
-                        className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${activeTab === 'jobs'
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
-                            }`}
-                    >
-                        Métiers (Jobs)
-                    </button>
-                </div>
-
-                {/* Main Content Area */}
-                <div className="transition-all duration-300 ease-in-out">
-                    {activeTab === 'general' ? (
-                        <SectionGeneral config={config} setConfig={setConfig} />
-                    ) : (
-                        <SectionJobs config={config} setConfig={setConfig} />
-                    )}
-                </div>
-
-                <div className="mt-8 p-4 bg-muted/30 rounded border border-border">
-                    <h3 className="font-bold mb-2 text-sm text-muted-foreground uppercase tracking-wider">Debug Import</h3>
-                    <textarea
-                        className="w-full h-24 bg-background p-3 border border-border rounded font-mono text-xs text-muted-foreground focus:text-foreground transition-colors"
-                        placeholder="Collez un config.lua ici pour tester le parser..."
-                        onChange={handleImport}
-                    />
-                </div>
-            </div>
-        </main>
-    );
+export default async function Home(props: PageProps) {
+    // Next.js 15+ : résoudre params/searchParams côté serveur pour ne pas passer de Promises au client
+    await Promise.all([
+        props.params ?? Promise.resolve({}),
+        props.searchParams ?? Promise.resolve({}),
+    ]);
+    return <HomeClient />;
 }

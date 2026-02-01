@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-// Simple interface for vector (avoiding complex Typescript for now to speed up migration)
 interface Vector {
     x: number;
     y: number;
@@ -20,82 +19,75 @@ interface VectorInputProps {
     hasHeading?: boolean;
 }
 
+const REGEX_VECTOR3 = /^vector3\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)\s*$/i;
+const REGEX_VECTOR4 = /^vector4\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)\s*$/i;
+
+function vectorToStr(v: Vector | null, hasHeading: boolean): string {
+    if (!v) return hasHeading ? 'vector4(0, 0, 0, 0)' : 'vector3(0, 0, 0)';
+    const x = (v.x ?? 0).toFixed(2);
+    const y = (v.y ?? 0).toFixed(2);
+    const z = (v.z ?? 0).toFixed(2);
+    const w = (v.w ?? v.heading ?? 0).toFixed(2);
+    return hasHeading ? `vector4(${x}, ${y}, ${z}, ${w})` : `vector3(${x}, ${y}, ${z})`;
+}
+
+function parseVectorStr(str: string, hasHeading: boolean): Vector | null {
+    const trimmed = str.trim();
+    if (hasHeading) {
+        const m = trimmed.match(REGEX_VECTOR4);
+        if (m) return { x: parseFloat(m[1]), y: parseFloat(m[2]), z: parseFloat(m[3]), w: parseFloat(m[4]) };
+        return null;
+    }
+    const m = trimmed.match(REGEX_VECTOR3);
+    if (m) return { x: parseFloat(m[1]), y: parseFloat(m[2]), z: parseFloat(m[3]) };
+    return null;
+}
+
 const VectorInput = ({ label, value, onChange, hasHeading = false }: VectorInputProps) => {
-    const [localValue, setLocalValue] = useState<Vector>(value || { x: 0, y: 0, z: 0, w: 0 });
+    const [inputStr, setInputStr] = useState<string>(() => vectorToStr(value, hasHeading));
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        setLocalValue(value || { x: 0, y: 0, z: 0, w: 0 });
-    }, [value]);
+        const expected = vectorToStr(value, hasHeading);
+        setInputStr(expected);
+        setError(null);
+    }, [value?.x, value?.y, value?.z, value?.w, value?.heading, hasHeading]);
 
-    const handleChange = (axis: keyof Vector, val: string) => {
-        const newVal = { ...localValue, [axis]: parseFloat(val) || 0 };
-        setLocalValue(newVal);
-        onChange(newVal);
+    const validateAndApply = () => {
+        const parsed = parseVectorStr(inputStr, hasHeading);
+        if (parsed) {
+            setError(null);
+            onChange(parsed);
+        } else {
+            const expected = hasHeading
+                ? 'vector4(x, y, z, heading) — ex: vector4(252.28, -1376.35, 24.71, 145.51)'
+                : 'vector3(x, y, z) — ex: vector3(252.53, -1383.86, 30.56)';
+            setError(`Format attendu : ${expected}`);
+        }
     };
 
-    const handlePaste = (e: React.ClipboardEvent) => {
-        const text = e.clipboardData.getData('text');
-        // Try to parse vector3 or vector4 string
-        const v4 = text.match(/vector4\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/);
-        const v3 = text.match(/vector3\s*\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)/);
-
-        if (v4) {
-            e.preventDefault();
-            const newVal = { x: parseFloat(v4[1]), y: parseFloat(v4[2]), z: parseFloat(v4[3]), w: parseFloat(v4[4]) };
-            setLocalValue(newVal);
-            onChange(newVal);
-        } else if (v3) {
-            e.preventDefault();
-            const newVal = { x: parseFloat(v3[1]), y: parseFloat(v3[2]), z: parseFloat(v3[3]), w: localValue.w || 0 };
-            setLocalValue(newVal);
-            onChange(newVal);
-        }
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') validateAndApply();
     };
 
     return (
         <div className="mb-4">
-            <Label className="block text-xs font-medium text-muted-foreground mb-1">{label} {hasHeading ? '(Vector4)' : '(Vector3)'}</Label>
-            <div className="flex gap-2">
-                <Input
-                    type="number"
-                    step="0.01"
-                    value={localValue.x}
-                    onChange={(e) => handleChange('x', e.target.value)}
-                    onPaste={handlePaste}
-                    placeholder="X"
-                    className="min-w-0"
-                />
-                <Input
-                    type="number"
-                    step="0.01"
-                    value={localValue.y}
-                    onChange={(e) => handleChange('y', e.target.value)}
-                    onPaste={handlePaste}
-                    placeholder="Y"
-                    className="min-w-0"
-                />
-                <Input
-                    type="number"
-                    step="0.01"
-                    value={localValue.z}
-                    onChange={(e) => handleChange('z', e.target.value)}
-                    onPaste={handlePaste}
-                    placeholder="Z"
-                    className="min-w-0"
-                />
-                {hasHeading && (
-                    <Input
-                        type="number"
-                        step="0.01"
-                        value={localValue.w !== undefined ? localValue.w : (localValue.heading !== undefined ? localValue.heading : 0)}
-                        onChange={(e) => handleChange(localValue.heading !== undefined ? 'heading' : 'w', e.target.value)}
-                        onPaste={handlePaste}
-                        placeholder="H"
-                        title="Heading / W"
-                        className="min-w-0 border-l-2 border-l-primary/50"
-                    />
-                )}
-            </div>
+            <Label className="block text-xs font-medium text-muted-foreground mb-1">
+                {label} {hasHeading ? '(Vector4)' : '(Vector3)'}
+            </Label>
+            <Input
+                type="text"
+                value={inputStr}
+                onChange={(e) => {
+                    setInputStr(e.target.value);
+                    setError(null);
+                }}
+                onBlur={validateAndApply}
+                onKeyDown={handleKeyDown}
+                placeholder={hasHeading ? 'vector4(0, 0, 0, 0)' : 'vector3(0, 0, 0)'}
+                className={`font-mono text-sm ${error ? 'border-destructive focus-visible:ring-destructive' : ''}`}
+            />
+            {error && <p className="text-xs text-destructive mt-1">{error}</p>}
         </div>
     );
 };
