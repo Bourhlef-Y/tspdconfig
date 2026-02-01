@@ -7,12 +7,16 @@ import { exportToLua } from '@/lib/luaExporter';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/mode-toggle';
 import { defaultConfig } from '@/lib/configParser';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { LayoutList } from 'lucide-react';
 
 import SectionGeneral from '@/components/SectionGeneral';
 
 export default function Home() {
     const [config, setConfig] = useState(defaultConfig);
     const [activeTab, setActiveTab] = useState<'general' | 'jobs'>('general');
+    const [showRaw, setShowRaw] = useState(false);
 
     const handleImport = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target.value;
