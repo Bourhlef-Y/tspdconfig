@@ -38,6 +38,10 @@ export default function Home() {
         navigator.clipboard.writeText(lua);
     };
 
+    const toggleRawMode = (val: boolean) => {
+        setShowRaw(val);
+    };
+
     return (
         <main className="min-h-screen bg-background p-8 text-foreground">
             <div className="max-w-7xl mx-auto space-y-8">
