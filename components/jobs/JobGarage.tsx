@@ -80,22 +80,22 @@ const JobGarage = ({ job, onChange }: { job: any, onChange: (j: any) => void }) 
                         title="Points de Sortie (Véhicules)"
                         points={garage.spawnPoints}
                         onAdd={() => addSpawnPoint('spawnPoints')}
-                        onUpdate={(idx, v) => updateSpawnPoint('spawnPoints', idx, v)}
-                        onRemove={(idx) => removeSpawnPoint('spawnPoints', idx)}
+                        onUpdate={(idx: number, v: { x: number; y: number; z: number; w?: number }) => updateSpawnPoint('spawnPoints', idx, v)}
+                        onRemove={(idx: number) => removeSpawnPoint('spawnPoints', idx)}
                     />
                     <SpawnList
                         title="Points de Sortie (Hélicoptères)"
                         points={garage.heliSpawnPoints}
                         onAdd={() => addSpawnPoint('heliSpawnPoints')}
-                        onUpdate={(idx, v) => updateSpawnPoint('heliSpawnPoints', idx, v)}
-                        onRemove={(idx) => removeSpawnPoint('heliSpawnPoints', idx)}
+                        onUpdate={(idx: number, v: { x: number; y: number; z: number; w?: number }) => updateSpawnPoint('heliSpawnPoints', idx, v)}
+                        onRemove={(idx: number) => removeSpawnPoint('heliSpawnPoints', idx)}
                     />
                     <SpawnList
                         title="Points de Sortie (Bateaux)"
                         points={garage.boatSpawnPoints}
                         onAdd={() => addSpawnPoint('boatSpawnPoints')}
-                        onUpdate={(idx, v) => updateSpawnPoint('boatSpawnPoints', idx, v)}
-                        onRemove={(idx) => removeSpawnPoint('boatSpawnPoints', idx)}
+                        onUpdate={(idx: number, v: { x: number; y: number; z: number; w?: number }) => updateSpawnPoint('boatSpawnPoints', idx, v)}
+                        onRemove={(idx: number) => removeSpawnPoint('boatSpawnPoints', idx)}
                     />
                 </div>
             </CardContent>
