@@ -44,12 +44,23 @@ export default function Home() {
 
     return (
         <main className="min-h-screen bg-background p-8 text-foreground">
-            <div className="max-w-7xl mx-auto space-y-8">
+            <div className="max-w-7xl mx-auto flex flex-col space-y-8">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex items-center justify-between gap-4 mb-4">
                     <div>
                         <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">TSPD Config Editor</h1>
                         <p className="text-muted-foreground">Éditeur de configuration complet</p>
+                    </div>
+                    <div className="flex items-center gap-3 bg-card p-2 rounded-lg border border-border ml-auto">
+                        <Label htmlFor="mode-switch" className="flex items-center gap-2 text-xs font-medium cursor-pointer">
+                            <LayoutList size={14} className="text-blue-400" />
+                            Éditeur Visuel
+                        </Label>
+                        <Switch
+                            id="mode-switch"
+                            checked={showRaw}
+                            onCheckedChange={toggleRawMode}
+                        />
                     </div>
                     <div className="flex items-center gap-4">
                         <ModeToggle />
