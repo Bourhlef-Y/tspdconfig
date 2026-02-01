@@ -119,18 +119,6 @@ const SectionJobs = ({ config, setConfig, showRaw = false, onToggleRawMode }: Se
                 <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
                     <BriefcaseIcon className="text-blue-500" /> Configuration des Métiers
                 </h2>
-
-                <div className="flex items-center gap-3 bg-card p-2 rounded-lg border border-border">
-                    <Label htmlFor="mode-switch" className="flex items-center gap-2 text-xs font-medium cursor-pointer">
-                        {showRaw ? <Code size={14} className="text-blue-400" /> : <LayoutList size={14} className="text-blue-400" />}
-                        {showRaw ? 'Mode Brut (Lua)' : 'Éditeur Visuel'}
-                    </Label>
-                    <Switch
-                        id="mode-switch"
-                        checked={showRaw}
-                        onCheckedChange={toggleRawMode}
-                    />
-                </div>
             </div>
 
             {showRaw ? (
