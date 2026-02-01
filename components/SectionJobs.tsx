@@ -12,11 +12,12 @@ import { Label } from '@/components/ui/label';
 interface SectionJobsProps {
     config: any;
     setConfig: (c: any) => void;
+    showRaw?: boolean;
+    onToggleRawMode?: (val: boolean) => void;
 }
 
-const SectionJobs = ({ config, setConfig }: SectionJobsProps) => {
+const SectionJobs = ({ config, setConfig, showRaw = false, onToggleRawMode }: SectionJobsProps) => {
     const [activeJob, setActiveJob] = useState<string | null>(null);
-    const [showRaw, setShowRaw] = useState(false);
     const [rawText, setRawText] = useState(config.JobsRaw || '');
 
     // Initialiser activeJob si nécessaire
